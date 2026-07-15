@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" sizes="any" type="image/svg+xml">
+  <link rel="stylesheet" href="lib/ol.css">
+  <title>TOPS — Directional Route Finder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { display: flex; flex-direction: column; height: 100vh; background: #111; color: #ccc; font: 13px/1.4 monospace; }
+
+    #topbar {
+      display: flex; align-items: center; gap: 16px;
+      background: #1a1a1a; border-bottom: 1px solid #333; padding: 6px 12px;
+      flex-shrink: 0;
+    }
+    #topbar h1 { font-size: 14px; color: #fff; font-weight: bold; white-space: nowrap; }
+    #topbar a { color: #7af; text-decoration: none; font-size: 12px; }
+    #topbar a:hover { text-decoration: underline; }
+
+    #body { display: flex; flex: 1; overflow: hidden; }
+
+    #panel {
+      width: 340px; min-width: 280px; flex-shrink: 0;
+      background: #171717; border-right: 1px solid #333;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    #form {
+      padding: 10px 12px; border-bottom: 1px solid #2a2a2a; flex-shrink: 0;
+    }
+    #form .row { display: flex; gap: 8px; margin-bottom: 7px; align-items: center; }
+    #form label { color: #aaa; font-size: 12px; white-space: nowrap; }
+    #form input[type=number], #form select {
+      background: #222; border: 1px solid #444; color: #eee;
+      padding: 3px 6px; font: 12px monospace; border-radius: 3px;
+      width: 90px;
+    }
+    #form select { width: auto; }
+    #form .hint { color: #666; font-size: 11px; margin-bottom: 7px; }
+    #find-btn {
+      width: 100%; padding: 6px; background: #2a4a7a; border: 1px solid #4a7aaa;
+      color: #cde; font: bold 12px monospace; border-radius: 3px; cursor: pointer;
+    }
+    #find-btn:hover { background: #3a5a8a; }
+    #find-btn:disabled { background: #222; border-color: #333; color: #555; cursor: default; }
+
+    #status-line { padding: 5px 12px; font-size: 11px; color: #777; border-bottom: 1px solid #222; flex-shrink: 0; min-height: 22px; }
+
+    #results { flex: 1; overflow-y: auto; }
+    .route-card {
+      border-bottom: 1px solid #222; padding: 8px 12px; cursor: pointer;
+    }
+    .route-card:hover { background: #1e1e1e; }
+    .route-card.active { background: #1a2a3a; border-left: 3px solid #5af; padding-left: 9px; }
+    .route-card .rc-head {
+      display: flex; justify-content: space-between; margin-bottom: 4px;
+    }
+    .rc-jumps { color: #fa0; font-weight: bold; font-size: 12px; }
+    .rc-dist { color: #5f5; font-size: 12px; }
+    .rc-steps { font-size: 11px; color: #888; line-height: 1.5; }
+    .rc-steps span { color: #aaa; }
+    .rc-steps .arrow { color: #555; }
+    .no-results { padding: 20px 12px; color: #555; font-size: 12px; }
+
+    #map-wrap { flex: 1; position: relative; }
+    #map { width: 100%; height: 100%; }
+    #coords { position: absolute; bottom: 6px; left: 8px; font-size: 11px; color: #aaa;
+      background: rgba(0,0,0,.5); padding: 2px 6px; border-radius: 3px; pointer-events: none; }
+    #click-hint { position: absolute; top: 8px; left: 8px; font-size: 11px; color: #aaa;
+      background: rgba(0,0,0,.6); padding: 3px 8px; border-radius: 3px; pointer-events: none; }
+  </style>
+</head>
+<body>
+<div id="topbar">
+  <h1>TOPS Directional Route Finder</h1>
+  <a href="index.html">← Back to map</a>
+</div>
+<div id="body">
+  <div id="panel">
+    <div id="form">
+      <div class="hint">Click the map or enter game coordinates (F3 in-game).</div>
+      <div class="row">
+        <label>X</label><input id="rx" type="number" value="0" step="1">
+        <label>Z</label><input id="rz" type="number" value="0" step="1">
+      </div>
+      <div class="row">
+        <label>Direction</label>
+        <select id="rdir">
+          <option value="1">South (↓ Z)</option>
+          <option value="-1">North (↑ Z)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Walk radius</label>
+        <input id="rwalk" type="number" value="500" min="50" max="2000" step="50">
+        <label style="color:#666">blocks</label>
+      </div>
+      <div class="row">
+        <label>Max jumps</label>
+        <input id="rmax" type="number" value="15" min="1" max="40" step="1">
+      </div>
+      <button id="find-btn" disabled>Loading…</button>
+    </div>
+    <div id="status-line">Loading translocator data…</div>
+    <div id="results"></div>
+  </div>
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div id="coords"></div>
+    <div id="click-hint">Click map to set start position</div>
+  </div>
+</div>
+<script src="lib/ol.js"></script>
+<script src="worldExtent.js"></script>
+<script src="settings.js"></script>
+<script src="router.js"></script>
+</body>
+</html>
