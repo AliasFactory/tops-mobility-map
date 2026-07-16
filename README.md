@@ -65,11 +65,30 @@ cd pre
 MAX_WALK=500 SAMPLES=0 node preprocess.mjs   # writes ../mobility.geojson (~3 min exact)
 ```
 
-To refresh the source translocator data from TOPS:
+## Staying in sync with upstream
+
+The site is **base + overlay**: the base files (`automap.js`, `route.js`, `css/`,
+`lib/`, `data/geojson/`, ...) are mirrored verbatim from the live TOPS map, and
+our additions (`heatmap.js`, `router.*`, `server.mjs`, `pre/`, `mobility.geojson`)
+sit on top. `sync.mjs` refreshes the base in place and re-derives `index.html` by
+re-applying our overlay patch to the current upstream page — so we track upstream
+changes (new scripts, CSS, icons, themes) without hand-merging.
 
 ```bash
-curl -s http://localhost:4242/data/geojson/translocators.geojson -o pre/translocators.geojson
+node sync.mjs            # refresh base code + data, rebuild index.html overlay
+node sync.mjs --check    # dry run: report what WOULD change, write nothing
+node sync.mjs --data     # only refresh data/geojson (+ copy TL data to pre/)
+node sync.mjs --code     # only refresh base code + index.html (skip data)
+node sync.mjs --build    # sync, then rebuild mobility.geojson if TL data changed
 ```
+
+`sync.mjs` compares every file byte-for-byte and only writes what actually
+changed; it self-discovers newly-referenced upstream assets (icons/themes) and
+never touches overlay files. Our whole `index.html` diff lives in the
+`applyOverlay()` function there (inject `heatmap.js`, add the Route Finder tab,
+make `/lib/ol.css` relative for Pages). When the vendored translocator data
+changes, `sync.mjs` copies it to `pre/translocators.geojson` and reminds you to
+recompute `mobility.geojson` (or does it for you with `--build`).
 
 ## Graph model
 
