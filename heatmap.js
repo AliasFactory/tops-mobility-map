@@ -176,9 +176,8 @@
 
   /* ---------------- control panel ---------------- */
   const panel = document.createElement('div');
-  // top:52px keeps the panel clear of the centered title/nav bar (~41px tall at
-  // top:0) so it never covers the nav tabs. max-height + overflow lets it scroll
-  // on short windows instead of running off the bottom.
+  // These top/right values are only fallbacks; placePanel() below measures the
+  // real chrome and repositions. See the note there.
   panel.style.cssText =
     'position:fixed;top:52px;right:8px;z-index:1000;width:210px;padding:10px 12px;' +
     'max-height:calc(100vh - 60px);overflow-y:auto;' +
@@ -263,6 +262,33 @@
     </label>
     </div>`;
   document.body.appendChild(panel);
+
+  // Keep the panel clear of the map's own chrome instead of guessing offsets:
+  // sit below the centered title bar (which can wrap to two rows) and to the
+  // left of the top-right #tools box. Measured from the live layout so it stays
+  // correct across zoom, resize and upstream chrome changes -- and it has to
+  // live here rather than in css/default.css, which sync.mjs overwrites.
+  function placePanel() {
+    const GAP = 8;
+    let top = GAP;
+    const bar = document.getElementById('titleBar');
+    if (bar) {
+      const r = bar.getBoundingClientRect();
+      if (r.width && r.height) top = r.bottom + GAP;
+    }
+    let right = GAP;
+    for (const el of [document.getElementById('tools'), document.querySelector('.ol-zoom')]) {
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width && r.height) right = Math.max(right, window.innerWidth - r.left + GAP);
+    }
+    panel.style.top = top + 'px';
+    panel.style.right = right + 'px';
+    panel.style.maxHeight = 'calc(100vh - ' + (top + GAP) + 'px)';
+  }
+  placePanel();
+  window.addEventListener('resize', placePanel);
+  window.addEventListener('load', placePanel); // re-measure once chrome has settled
 
   const $ = (id) => panel.querySelector(id);
 
