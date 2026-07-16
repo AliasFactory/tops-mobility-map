@@ -58,8 +58,32 @@ const DATA = [
 // heatmap.js router.html router.js server.mjs sync.mjs mobility.geojson
 // README.md .nojekyll .gitignore pre/*
 
-// ---- the overlay "patch" applied to upstream index.html ---------------------
-// Idempotent: re-running produces the same result. This IS our index.html diff.
+// ---- the overlay "patches" applied to upstream base files -------------------
+// All idempotent: re-running produces the same result. These ARE our diffs
+// against upstream — never hand-edit the base files themselves, edit these.
+
+// automap.js: hotlink map tiles straight at TOPS.
+// Tiles are multi-GB so we never vendor them. Upstream fetches them from a
+// relative 'data/world/...', which only works here because server.mjs proxies
+// misses upstream — on static hosting (GitHub Pages) it 404s and the map loses
+// all terrain. Tiles are plain images (no CORS), so an absolute upstream URL
+// works both locally and deployed.
+function overlayAutomap(js) {
+  const TILE_URL = `https://${UPSTREAM}/data/world/{z}/{x}_{y}.png`;
+  if (js.includes(TILE_URL)) return js; // already patched
+  const out = js.replace(
+    /url:\s*dataFolder\s*\+\s*'\/world\/\{z\}\/\{x\}_\{y\}\.png'/,
+    `url: '${TILE_URL}'`,
+  );
+  if (out === js) {
+    console.log('  !! WARNING: tile-URL patch did NOT apply to automap.js.');
+    console.log('     Upstream changed its tile source; terrain will 404 on static hosting.');
+    console.log('     Fix overlayAutomap() in sync.mjs to match the new upstream code.');
+  }
+  return out;
+}
+
+// index.html: our page-level additions.
 function applyOverlay(html) {
   let h = html;
   // 1. de-absolutise the one root-absolute asset ref so the site works from a
@@ -78,6 +102,12 @@ function applyOverlay(html) {
   }
   return h;
 }
+
+// base file -> the overlay patch to re-apply after fetching it
+const TRANSFORMS = {
+  'automap.js': overlayAutomap,
+  'index.html': applyOverlay,
+};
 
 // ---- http ------------------------------------------------------------------
 function get(path) {
@@ -192,7 +222,7 @@ async function main() {
       const rel = queue[i];
       if (seen.has(rel)) continue;
       seen.add(rel);
-      const r = await syncFile(rel);
+      const r = await syncFile(rel, TRANSFORMS[rel]);
       if (r.status === 'update' || r.status === 'new') changed++;
       if (r.text) for (const p of scanRefs(r.text)) if (!seen.has(p) && !queue.includes(p)) queue.push(p);
     }

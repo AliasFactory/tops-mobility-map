@@ -1121,7 +1121,7 @@ let vsWorld = new ol.layer.Tile({
         interpolate: false,
         wrapx: false,
         tileGrid: vsWorldGrid, // defined in worldExtent.js
-        url: dataFolder + '/world/{z}/{x}_{y}.png',
+        url: 'https://map.tops.vintagestory.at/data/world/{z}/{x}_{y}.png',
     })
 })
 
