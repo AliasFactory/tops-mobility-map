@@ -176,12 +176,20 @@
 
   /* ---------------- control panel ---------------- */
   const panel = document.createElement('div');
+  // top:52px keeps the panel clear of the centered title/nav bar (~41px tall at
+  // top:0) so it never covers the nav tabs. max-height + overflow lets it scroll
+  // on short windows instead of running off the bottom.
   panel.style.cssText =
-    'position:fixed;top:8px;right:8px;z-index:1000;width:210px;padding:10px 12px;' +
+    'position:fixed;top:52px;right:8px;z-index:1000;width:210px;padding:10px 12px;' +
+    'max-height:calc(100vh - 60px);overflow-y:auto;' +
     'font:12px/1.5 sans-serif;background:rgba(20,32,46,.92);color:#dfe9f3;' +
     'border:1px solid #2d5b87;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.4)';
   panel.innerHTML = `
-    <div style="font-weight:bold;margin-bottom:6px">TL Mobility heatmap</div>
+    <div id="hm-head" style="display:flex;align-items:center;justify-content:space-between;
+      cursor:pointer;user-select:none;font-weight:bold;margin-bottom:6px">
+      <span>TL Mobility heatmap</span><span id="hm-caret">▾</span>
+    </div>
+    <div id="hm-body">
     <label style="display:block;position:relative">Metric
       <span id="hm-info" style="display:inline-block;width:14px;height:14px;line-height:14px;
         text-align:center;border-radius:50%;background:#2d5b87;color:#fff;font-style:italic;
@@ -252,10 +260,19 @@
     </label>
     <label style="display:block;margin-top:4px">
       <input type="checkbox" id="hm-on" checked> show overlay
-    </label>`;
+    </label>
+    </div>`;
   document.body.appendChild(panel);
 
   const $ = (id) => panel.querySelector(id);
+
+  // collapse/expand the panel body (click the header). Starts expanded.
+  $('#hm-head').onclick = () => {
+    const body = $('#hm-body');
+    const open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : '';
+    $('#hm-caret').textContent = open ? '▸' : '▾';
+  };
 
   // grey out + disable controls that have no effect under the current toggles
   function setCtl(id, on, dimLabel) {
