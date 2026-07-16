@@ -4,5 +4,8 @@ var settings = {
     titleBarCommunity: "Vintagestory",
     siteUrl: "https://vintagestory.at",
     updateText : "Last updated on ",
-    lastUpdated : "Friday, 29 May 2026."
+    tradersExported : false,
+    translocatorsExported : true,
+    chunksExported : false,
+    lastUpdated : "Wednesday, 15 July 2026.",
 }

@@ -1,3 +1,44 @@
+:root {
+    --boxBg: rgb(32, 34, 37);
+    --boxBorder: rgba(16, 17, 18);
+    --boxText: rgb(220, 221, 222);
+    --mapBg: #000;
+    --credsBtnText: rgb(220, 221, 222);
+    --credsBtnHoverBg: rgba(255, 255, 255, 0.2);
+    --credsURLColor: #ff0;
+    --layerSwitcherTitleSeparator: rgba(255, 255, 255, 0.5);
+    --layerSwitcherLayerSeparator: rgba(255, 255, 255, 0.25);
+    --layerSwitcherBtnHoverBg: rgba(0, 255, 255, 0.5);
+    --layerSwitcherBtnActiveBg: rgba(0, 255, 255, 0.75);
+    --toolsBtnText: #fff;
+    --toolsBtnHoverBg: rgba(255, 255, 255, 0.25);
+    --popupInputText: #ccc;
+    --popupInputBg: #000;
+    --popupBorder: rgba(255, 255, 255, 0.3);
+    --popupTitleBorder: rgba(255, 255, 255, 0.25);
+    --popupButtonHover: rgba(0, 255, 255, 0.5);
+    --popupButtonActive: rgba(0, 255, 255, 0.75);
+    --popupButtonDefaultBg: rgba(0, 255, 255, 0.15);
+    --popupButtonDefaultBgHover: rgba(0, 255, 255, 0.55);
+    --popupButtonDefaultBgActive: rgba(0, 255, 255, 0.8);
+    --popupControlsBorder: rgba(255, 255, 255, 0.25);
+    --popupSplashBgOdd: rgba(0, 0, 0, 0.75);
+    --popupSplashBgEven: rgba(16, 8, 0, 0.75);
+    --olZoomBg: rgba(0, 60, 136, 0.5);
+    --olZoomBorder: rgba(255, 255, 255, 0.3);
+    --olZoomText: #fff;
+    --titleBarBg: #000;
+    --titleBarBorder: #000;
+    --titleBarItemBg: #000;
+    --titleBarItemBorder: #000;
+    --titleBarItemText: #fff;
+    --titleBarItemTitle: #0ff;
+    --titleBarItemHoverText: #000;
+    --titleBarItemHoverBg: #fff;
+    --url: #ff0;
+    --sign: #420;
+}
+
 body {
     overflow: hidden;
     padding: 0;
@@ -14,7 +55,8 @@ input, button {
 #map {
     height: 100vh;
     width: 100vw;
-    background-color: var(--mapBg);
+    background-image: url('../assets/sky.png');
+    background-repeat: repeat;
 }
 
 #mousePos {
@@ -34,7 +76,7 @@ input, button {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    font-size: 12pt;
+    font-size: 8pt;
 }
 
 #contributors div.left {
@@ -48,7 +90,7 @@ input, button {
     border-radius: 5px;
     padding: 4px;
     margin: -4px 0;
-    font-size: 12pt;
+    font-size: 10pt;
     position: relative;
 }
 
@@ -76,10 +118,6 @@ input, button {
     position: absolute;
     left: 0.5vh;
     top: max(5vh, 38pt);
-    /* Keep the legend at least as wide as its fully-expanded state so that
-       folding sections in does not shrink it (and the docked tool panels that
-       follow its width) to an unusably narrow size. */
-    min-width: 15em;
 }
 
 #layers .layerSwitcherTitle {
@@ -101,7 +139,7 @@ input, button {
     font-weight: bold;
 }
 
-#layerSwitcher .layerSwitcherTitle button {
+#layerSwitcher button {
     font-size: 8pt;
     padding: 0 2pt 1pt 2pt;
     margin: 1pt 0 0 1pt;
@@ -117,43 +155,12 @@ input, button {
     font-family: sans-serif;
 }
 
-#layerSwitcher .layerSwitcherTitle button:hover {
+#layerSwitcher button:hover {
     background-color: var(--layerSwitcherBtnHoverBg);
 }
 
-#layerSwitcher .layerSwitcherTitle button:active {
+#layerSwitcher button:active {
     background-color: var(--layerSwitcherBtnActiveBg);
-}
-
-/* Legend-style buttons for the route / trader panels. */
-.panelBtn {
-    font-size: 8pt;
-    padding: 1pt 5pt 2pt 5pt;
-    border: 1px solid var(--boxBorder);
-    border-radius: 4px;
-    background-color: transparent;
-    color: inherit;
-    font-weight: bold;
-    font-family: sans-serif;
-    cursor: pointer;
-}
-
-.panelBtn:hover {
-    background-color: var(--layerSwitcherBtnHoverBg);
-}
-
-.panelBtn:active,
-.panelBtn.selected {
-    background-color: var(--layerSwitcherBtnActiveBg);
-}
-
-/* Highlight a nearest-trader row on hover so it's clear it's clickable. */
-.traderRow {
-    border-radius: 3px;
-}
-
-.traderRow:hover {
-    background-color: var(--layerSwitcherBtnHoverBg);
 }
 
 #layerSwitcher .layerBlock {
@@ -200,22 +207,6 @@ input, button {
 #tools button:hover {
     background-color: var(--toolsBtnHoverBg);
     text-shadow: -0.5px 1px 0 #000, 1px 1px 0 #000, -0.5px -0.5px 0 #000;
-}
-
-#tools button.selected {
-    background-color: var(--toolsBtnHoverBg);
-    text-shadow: -0.5px 1px 0 #000, 1px 1px 0 #000, -0.5px -0.5px 0 #000;
-}
-
-#tlProximityPanel {
-    text-align: left;
-    font-size: 90%;
-}
-
-#tlProximityPanel input[type="range"] {
-    width: 100%;
-    margin-top: 4px;
-    cursor: pointer;
 }
 
 #status {
@@ -311,7 +302,7 @@ input, button {
     min-width: 320px;
 }
 
-.guide > div {
+.guide div {
     min-width: 320px;
     max-width: 70vw;
     overflow: auto;
@@ -319,19 +310,11 @@ input, button {
     padding: 4px 8px 4px 4px;
 }
 
-.guide > div.title {
-    margin-bottom: 0;
-}
-
-.guide > div.controls {
-    margin-top: 0;
-}
-
-.guide > div a {
+.guide div a {
     color: var(--url);
 }
 
-.guide > div pre {
+.guide div pre {
     border: 1px solid var(--boxBorder);
     padding: 8pt;
     width: 8em;
@@ -374,7 +357,7 @@ input, button {
     left: 0;
     margin: 0 auto;
     background-color: var(--titleBarBg);
-    width: fit-content;
+    width: 30em;
     font-size: 14pt;
     text-align: center;
     padding: 0;
@@ -388,22 +371,21 @@ input, button {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    /* justify-content: space-around; */
+    justify-content: space-around;
     align-items: center;
 }
 
 #titleBar ul li {
     display: inline-block;
-    min-width: fit-content;
+    min-width: 6em;
     height: 40px;
     padding: 0;
-    margin: 0;
+    margin: 0 1px;
     vertical-align: middle;
     flex-grow: 1;
 }
 
 #titleBar ul li a, #titleBar ul li h1 {
-    min-width: 6em;
     font-size: 100%;
     display: inline-block;
     color: var(--titleBarItemText);
@@ -413,19 +395,16 @@ input, button {
     height: 32px;
     vertical-align: middle;
     padding-top: 8px;
-    margin-right: 8px;
     border: 1px solid var(--titleBarItemBorder);
-    border-color: #8c8273;
+    margin: 0;
 }
 
 #titleBar ul li:first-child h1 {
-    margin-left: 0;
     border-bottom-left-radius: 8px;
     color: var(--titleBarItemTitle);
 }
 
 #titleBar ul li:last-child a {
-    margin-left: 0;
     border-bottom-right-radius: 8px;
 }
 
@@ -440,6 +419,4 @@ input, button {
     top: -3px;
 }
 
-input[type="number"] {
-    padding-left: 0.5em;
-}
+

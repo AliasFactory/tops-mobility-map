@@ -39,6 +39,19 @@ pie oven!</pre>
 SPAWN
 Spawn - 
 Main Town</pre>
+      <h3>Tagging Elk traversable translocators : &lt;AM:TLE&gt;</h3>
+      <p>Some translocators can be reached by Elks (for example through an Elk friendly tunnel or a surface-to-surface
+        connection). To flag a translocator as Elk traversable, place a sign in the same chunk just like a regular
+        &lt;AM:TL&gt; tag, but enter &lt;AM:TLE&gt; on the first line instead. The rest of the sign format stays the same:
+        the second line is the tag name and the remaining lines are the label. <strong>Both ends of the translocator
+        must be tagged &lt;AM:TLE&gt;</strong> for it to count as Elk traversable, since an Elk has to be able to enter
+        from either side. Elk traversable translocators are shown in their own color on the map. If two nearby
+        translocators are both tagged &lt;AM:TLE&gt;, you can assume there is a connection an Elk can traverse between
+        them.</p>
+<pre>&lt;AM:TLE&gt;
+HUB
+North Pass -
+Elk Tunnel</pre>
       <h3>Adding a "custom" marker : &lt;AM:CUSTOM&gt;</h3>
       <p>If enabled by the server administrator, you can create custom tagged markers. Place a sign and on the first line enter 
          &lt;AM:YOUR_TAG&gt; where YOUR_TAG is any custom tag name you want to use. Use the next lines to add a label to the marker. 
