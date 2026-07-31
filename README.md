@@ -7,11 +7,19 @@ custom **translocator mobility** heatmap overlay.
 
 ```bash
 node server.mjs            # serves http://localhost:4242/  (PORT=4242 by default)
+HOST=0.0.0.0 node server.mjs   # also expose on the LAN - see the warning below
 ```
 
 `server.mjs` serves the static frontend from this directory and **proxies any
 missing path** through to the live TOPS map (a fallback; the GeoJSON and icons
 are now vendored locally). Map tiles always stream directly from TOPS.
+
+It binds **loopback only** by default. Because any local miss is forwarded
+upstream, a wide bind turns this into an open forward proxy: anyone who can
+reach the port pulls TOPS content sourced from your IP, and the bandwidth is
+attributed to you. `HOST=0.0.0.0` opts in when you genuinely want the map on a
+phone or another machine. Dotfiles are refused outright (`.git/` would otherwise
+serve full repo history), and paths are confined to this directory.
 
 ## Deploy to GitHub Pages
 

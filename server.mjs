@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const UPSTREAM = 'map.tops.vintagestory.at';
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4242;
+// Loopback by default: this server is an open forward proxy to UPSTREAM, so a
+// wide bind lets anyone on the network pull TOPS through your IP. Opt in with
+// HOST=0.0.0.0 when you actually want LAN access.
+const HOST = process.env.HOST || '127.0.0.1';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -58,6 +62,14 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Never serve dotfiles - .git/ in particular would hand out repo history.
+  // Refuse outright rather than falling through, so these can't be proxied either.
+  if (urlPath.split('/').some((seg) => seg.startsWith('.') && seg !== '.' && seg !== '..')) {
+    res.writeHead(403);
+    res.end('Forbidden');
+    return;
+  }
+
   try {
     const s = await stat(localPath);
     if (s.isFile()) {
@@ -73,7 +85,14 @@ const server = createServer(async (req, res) => {
   proxyToUpstream(req.url || urlPath, res);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`TOPS map (local) -> http://localhost:${PORT}/`);
   console.log(`Serving frontend from ${ROOT}, proxying misses to https://${UPSTREAM}`);
+  if (HOST === '127.0.0.1') {
+    console.log('Bound to loopback only. For LAN access (phone, another box):');
+    console.log(`  HOST=0.0.0.0 node server.mjs   # careful: open proxy to ${UPSTREAM}`);
+  } else {
+    console.log(`WARNING: bound to ${HOST} - reachable from the network.`);
+    console.log(`  Anyone who can reach port ${PORT} can pull ${UPSTREAM} through your IP.`);
+  }
 });
