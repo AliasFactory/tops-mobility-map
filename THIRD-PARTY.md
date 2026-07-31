@@ -5,7 +5,22 @@ overlay added. Most of what it serves was written by other people. Their
 licences require their copyright notices to travel with any redistribution,
 including a static deploy like this one, so they are reproduced in full below.
 
-Our own code is MIT — see `LICENSE`.
+## What the MIT licence in `LICENSE` covers
+
+`LICENSE` is deliberately kept as plain MIT text so GitHub detects it, but it
+applies **only to the parts of this repository authored here**:
+
+```
+heatmap.js, router.html, router.js, server.mjs, sync.mjs, pre/,
+mobility.geojson, robots.txt, sitemap.xml, README.md, THIRD-PARTY.md
+```
+
+Everything else is third-party work redistributed under its own terms, listed
+below. `index.html` is a mixed work: it is upstream's page with our overlay
+patch re-applied by `sync.mjs` — the patch is ours, the page is not.
+
+The map data and terrain tiles are **not ours and not covered by any licence
+here** — see "Map data and terrain tiles" below.
 
 | Component | Files | Licence |
 |---|---|---|

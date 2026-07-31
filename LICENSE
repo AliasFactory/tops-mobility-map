@@ -19,18 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This licence covers only the parts of this repository authored here - the
-mobility heatmap, route finder, sync tooling and preprocessing:
-
-  heatmap.js, router.html, router.js, server.mjs, sync.mjs, pre/,
-  mobility.geojson, robots.txt, sitemap.xml, README.md
-
-Everything else is third-party work redistributed under its own terms. Note
-that index.html is upstream's file with our overlay patch re-applied by
-sync.mjs, so it is a mixed work: the patch is ours, the page is not.
-
-The map data (data/geojson/) and the terrain tiles are NOT ours and are not
-covered by any licence here. See THIRD-PARTY.md.
