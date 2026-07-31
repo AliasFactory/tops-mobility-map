@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Analysis inputs/outputs - large JSON, nothing useful in search results.
+Disallow: /mobility.geojson
+Disallow: /data/geojson/
+Disallow: /pre/
+
+Sitemap: https://aliasfactory.github.io/tops-mobility-map/sitemap.xml

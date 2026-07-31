@@ -24,6 +24,8 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const UPSTREAM = 'map.tops.vintagestory.at';
+// Public URL this mirror is published at (canonical/og tags, sitemap).
+const SITE_URL = 'https://aliasfactory.github.io/tops-mobility-map/';
 
 const args = new Set(process.argv.slice(2));
 const CHECK = args.has('--check') || args.has('-n');
@@ -100,7 +102,73 @@ function applyOverlay(html) {
   if (!h.includes('heatmap.js')) {
     h = h.replace('</body>', '<script src="heatmap.js"></script>\n</body>');
   }
+  // 4. page metadata for search engines and link unfurls.
+  h = applySeo(h);
   return h;
+}
+
+// Upstream ships `<title></title>` and no description/viewport/social tags — the
+// page is a bare OpenLayers canvas, so a crawler sees an empty document. These
+// give search engines and Discord/Reddit unfurls something real to work with,
+// and describe OUR overlay (mobility heatmap + route finder) rather than
+// restating the official TOPS map, which this must not compete with or
+// impersonate. Idempotent: keyed on the SEO_MARK comment.
+const SEO_MARK = '<!-- seo (overlay) -->';
+function applySeo(html) {
+  if (html.includes(SEO_MARK)) return html;
+
+  const TITLE = 'Translocator Mobility Heatmap — unofficial TOPS map overlay';
+  const DESC =
+    'An unofficial companion to the TOPS Vintage Story map: a heatmap ranking '
+    + 'translocator hubs by network mobility, plus a translocator route finder. '
+    + 'Map data and tiles come from the official TOPS map.';
+
+  const head = `    ${SEO_MARK}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="${DESC}">
+    <link rel="canonical" href="${SITE_URL}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TOPS Translocator Mobility Heatmap">
+    <meta property="og:title" content="${TITLE}">
+    <meta property="og:description" content="${DESC}">
+    <meta property="og:url" content="${SITE_URL}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${TITLE}">
+    <meta name="twitter:description" content="${DESC}">
+`;
+  html = html.replace('</head>', head + '</head>');
+
+  // Upstream's <title> is empty and automap.js overwrites document.title with
+  // settings.title ("TOPS") at runtime. Set the static tag for non-JS scrapers
+  // (Discord, Slack, most social unfurlers), then re-assert it after automap.js
+  // has run so Google's rendered DOM agrees with the raw HTML.
+  html = html.replace('<title></title>', `<title>${TITLE}</title>`);
+
+  // Real indexable prose, added to the existing (visible) credits panel rather
+  // than as a floating block - the map is full-screen, so a bare div would
+  // either break the layout or have to be hidden, and crawler-only text is
+  // cloaking. This is shown to users exactly as it is to Google.
+  const blurb = `        <h1>Translocator Mobility Heatmap</h1>
+        <p>An unofficial analysis overlay on the
+        <a href="https://map.tops.vintagestory.at">official TOPS Vintage Story map</a>.
+        It scores every translocator endpoint by how much of the server's shortest-path
+        travel flows through it, so you can see which translocator hubs actually carry
+        the network, and includes a route finder that plans translocator journeys.
+        Map data and terrain tiles are served by the official TOPS map.</p>
+`;
+  html = html.replace('<div class="left">\n', `<div class="left">\n${blurb}`);
+  // Keep the injected heading in scale with the small credits type.
+  html = html.replace(
+    '</head>',
+    '<style>#contributors .left h1{font-size:1.05em;margin:0 0 .25em}'
+      + '#contributors .left p{margin:0 0 .4em}</style>\n</head>',
+  );
+
+  html = html.replace(
+    '</body>',
+    `<script>document.title = ${JSON.stringify(TITLE)};</script>\n</body>`,
+  );
+  return html;
 }
 
 // base file -> the overlay patch to re-apply after fetching it

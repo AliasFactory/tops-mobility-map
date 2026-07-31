@@ -14,7 +14,20 @@
     <script src="worldExtent.js"></script>
     <script src="settings.js"></script>
     <script src="version.js"></script>
-    <title></title>
+    <title>Translocator Mobility Heatmap — unofficial TOPS map overlay</title>
+    <!-- seo (overlay) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An unofficial companion to the TOPS Vintage Story map: a heatmap ranking translocator hubs by network mobility, plus a translocator route finder. Map data and tiles come from the official TOPS map.">
+    <link rel="canonical" href="https://aliasfactory.github.io/tops-mobility-map/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TOPS Translocator Mobility Heatmap">
+    <meta property="og:title" content="Translocator Mobility Heatmap — unofficial TOPS map overlay">
+    <meta property="og:description" content="An unofficial companion to the TOPS Vintage Story map: a heatmap ranking translocator hubs by network mobility, plus a translocator route finder. Map data and tiles come from the official TOPS map.">
+    <meta property="og:url" content="https://aliasfactory.github.io/tops-mobility-map/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Translocator Mobility Heatmap — unofficial TOPS map overlay">
+    <meta name="twitter:description" content="An unofficial companion to the TOPS Vintage Story map: a heatmap ranking translocator hubs by network mobility, plus a translocator route finder. Map data and tiles come from the official TOPS map.">
+<style>#contributors .left h1{font-size:1.05em;margin:0 0 .25em}#contributors .left p{margin:0 0 .4em}</style>
 </head>
 <body>
 <div id="map" class="map"></div>
@@ -26,6 +39,13 @@
 <div id="tools" class="c"></div>
 <div id="contributors" class="c">
     <div class="left">
+        <h1>Translocator Mobility Heatmap</h1>
+        <p>An unofficial analysis overlay on the
+        <a href="https://map.tops.vintagestory.at">official TOPS Vintage Story map</a>.
+        It scores every translocator endpoint by how much of the server's shortest-path
+        travel flows through it, so you can see which translocator hubs actually carry
+        the network, and includes a route finder that plans translocator journeys.
+        Map data and terrain tiles are served by the official TOPS map.</p>
         <p>Data from <a id="serverWebsite"></a></p>
         <p id="lastUpdated"></p>
         <p><a href="https://gitlab.com/th3dilli_vintagestory/WebCartographer">WebCartographer</a> by Th3Dilli, Zadak and Drakker.</p>
@@ -49,5 +69,6 @@
 <script src="traders.js"></script>
 <script src="automap.js"></script>
 <script src="heatmap.js"></script>
+<script>document.title = "Translocator Mobility Heatmap — unofficial TOPS map overlay";</script>
 </body>
 </html>
