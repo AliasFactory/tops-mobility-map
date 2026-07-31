@@ -7,5 +7,5 @@ var settings = {
     tradersExported : false,
     translocatorsExported : true,
     chunksExported : false,
-    lastUpdated : "Wednesday, 15 July 2026.",
+    lastUpdated : "Wednesday, 29 July 2026.",
 }
