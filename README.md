@@ -42,6 +42,19 @@ demo; if it gets real traffic, host the tiles yourself or ask the TOPS admins.
 The `pre/` preprocessing stays offline — only the resulting `mobility.geojson`
 is committed.
 
+## Licensing
+
+Our overlay code (`heatmap.js`, `router.*`, `server.mjs`, `sync.mjs`, `pre/`) is
+MIT — see `LICENSE`. The base map is WebCartographer (MIT) plus OpenLayers,
+ol-ext, Font Awesome and Twemoji; their notices are reproduced in
+`THIRD-PARTY.md`, as their licences require for a public deploy.
+
+The **map data is not ours to license**. `data/geojson/` is mirrored from TOPS
+and the terrain tiles are hotlinked from their server; both are player-surveyed
+data with no stated licence. WebCartographer's MIT covers the software that
+draws the map, not the dataset. If the TOPS admins would rather it not be
+mirrored or the tiles not hotlinked, that takes precedence.
+
 ## Heatmap
 
 `heatmap.js` adds an `ol.layer.Heatmap` overlay driven by `mobility.geojson`,

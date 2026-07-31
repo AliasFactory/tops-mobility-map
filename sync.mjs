@@ -26,6 +26,8 @@ const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const UPSTREAM = 'map.tops.vintagestory.at';
 // Public URL this mirror is published at (canonical/og tags, sitemap).
 const SITE_URL = 'https://aliasfactory.github.io/tops-mobility-map/';
+// Repo, for the third-party attribution link in the credits panel.
+const REPO_URL = 'https://github.com/AliasFactory/tops-mobility-map';
 
 const args = new Set(process.argv.slice(2));
 const CHECK = args.has('--check') || args.has('-n');
@@ -155,6 +157,9 @@ function applySeo(html) {
         travel flows through it, so you can see which translocator hubs actually carry
         the network, and includes a route finder that plans translocator journeys.
         Map data and terrain tiles are served by the official TOPS map.</p>
+        <p>Overlay code MIT-licensed. Built on
+        <a href="${REPO_URL}/blob/master/THIRD-PARTY.md">third-party work</a>
+        including WebCartographer, OpenLayers, ol-ext, Font Awesome and Twemoji.</p>
 `;
   html = html.replace('<div class="left">\n', `<div class="left">\n${blurb}`);
   // Keep the injected heading in scale with the small credits type.
